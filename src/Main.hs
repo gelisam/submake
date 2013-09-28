@@ -1,4 +1,4 @@
-import Math.Fib
+module Main where
 
 
 main = putStrLn "typechecks."
