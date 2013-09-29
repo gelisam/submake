@@ -5,25 +5,9 @@ import System.IO
 import System.IO.Error
 import System.IO.Error.Extra
 
-
-data Recipe = Recipe { sourceFile :: String
-                     , targetFile :: String
-                     }
-  deriving (Eq, Show)
-
-parseRecipe :: String -> Recipe
-parseRecipe xs = Recipe s t where
-  (t, xs') = break (== ':') xs
-  s = dropWhile (`elem` ": ") xs'
-
-parseSubmakefile :: String -> [Recipe]
-parseSubmakefile = map parseRecipe . lines
-
-
-cook :: Recipe -> IO ()
-cook r = withFile (targetFile r) WriteMode $ \t ->
-         withFile (sourceFile r) ReadMode $ \s ->
-           hPutStr t =<< hGetContents s
+import Submake.Cooker
+import Submake.Types
+import Submake.Parser
 
 
 withSubmakefile :: (Handle -> IO ()) -> IO ()
