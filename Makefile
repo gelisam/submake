@@ -29,14 +29,12 @@ big-tests: $(patsubst tests/%/expected,proofs/%.proof,$(shell find tests -name '
 	-@echo '*** ALL TESTS OK ***'
 
 proofs/%.proof: tests/%/in tests/%/expected
-	git checkout HEAD $<
-	pushd $< && ../../../dist/build/$(NAME)/$(NAME) > $(NAME).out 2> $(NAME).err && popd
+	git clean -f $<
+	pushd $< && (../../../dist/build/$(NAME)/$(NAME) || true) > $(NAME).out 2> $(NAME).err && popd
 	diff -r $^
-	touch $@
-
-proofs/%.out: tests/%.in build
+	git clean -f $<
 	mkdir -p $(dir $@)
-	./dist/build/$(NAME)/$(NAME) < $< > $@
+	touch $@
 
 
 clean:
