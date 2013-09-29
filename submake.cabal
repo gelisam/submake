@@ -24,4 +24,4 @@ Extra-source-files:  README.md,
 executable submake
   hs-source-dirs: src
   main-is:        Main.hs
-  build-depends:  base >= 4 && < 5
+  build-depends:  base >= 4.4 && < 5
