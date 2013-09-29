@@ -1,4 +1,6 @@
 module Main where
 
+import System.IO
 
-main = putStrLn "typechecks."
+
+main = withFile "out" WriteMode $ flip hPutStrLn "ok"
