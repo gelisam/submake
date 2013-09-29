@@ -31,7 +31,7 @@ withSubmakefile :: (Handle -> IO ()) -> IO ()
 withSubmakefile = tryWithFile catch "submakefile" ReadMode
   where
     catch = catchWhen isDoesNotExistError $ \_ ->
-              error "no submakefile found"
+              error "no submakefile found."
 
 main = withSubmakefile $ \f -> do
          return ()
