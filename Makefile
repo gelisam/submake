@@ -30,7 +30,7 @@ big-tests: $(patsubst tests/%/expected,proofs/%.proof,$(shell find tests -name '
 
 proofs/%.proof: tests/%/in tests/%/expected
 	git checkout HEAD $<
-	pushd $< && ../../../dist/build/$(NAME)/$(NAME) && popd
+	pushd $< && ../../../dist/build/$(NAME)/$(NAME) > $(NAME).out 2> $(NAME).err && popd
 	diff -r $^
 	touch $@
 
