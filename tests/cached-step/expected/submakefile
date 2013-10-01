@@ -1,0 +1,4 @@
+mythumbnail.png: myimage.png
+  pngtopnm
+  pamscale -xyfit 64 64
+  pnmtopng
