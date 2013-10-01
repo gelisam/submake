@@ -1,28 +1,29 @@
 module Submake.Cooker where
 
 import Control.Monad
+import Control.Monad.Extra
 import System.IO
 import System.Process
+import Text.Printf
 
+import Submake.Git
 import Submake.Types
 
 
-shell_io :: String -> Handle -> IO Handle
-shell_io cmd input = do
-    (Nothing, Just output, Nothing, _) <- createProcess info'
-    hSetBinaryMode output True
+cook_command :: Command -> String -> IO String
+cook_command command input = do
+    output <- readProcess "bash" ["-c", command] input
+    input_hash  <- hashString input
+    output_hash <- hashString output
+    let cacheData = printf "%s %s %s\n" input_hash output_hash command
+    appendFile "submakefile.cache" cacheData
     return output
-  where
-    info = shell cmd
-    info' = info { std_in = UseHandle input
-                 , std_out = CreatePipe
-                 , close_fds = True
-                 }
 
-cook :: Recipe -> IO ()
-cook r = withFile (targetFile r) WriteMode $ \t ->
-         withFile (sourceFile r) ReadMode $ \s -> do
-           hSetBinaryMode t True
-           hSetBinaryMode s True
-           output <- foldM (flip shell_io) s (commands r)
-           hPutStr t =<< hGetContents output
+cook_recipe :: Recipe -> IO ()
+cook_recipe r = do
+    input <- readFile (sourceFile r)
+    output <- loopM (commands r) input cook_command
+    writeFile (targetFile r) output
+
+cook_submakefile :: Submakefile -> IO ()
+cook_submakefile = mapM_ cook_recipe

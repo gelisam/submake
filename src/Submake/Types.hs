@@ -1,8 +1,23 @@
 module Submake.Types where
 
 
-data Recipe = Recipe { sourceFile :: String
-                     , targetFile :: String
-                     , commands :: [String]
+type Command = String
+type Hash = String
+
+
+data Recipe = Recipe { sourceFile :: FilePath
+                     , targetFile :: FilePath
+                     , commands :: [Command]
                      }
   deriving (Eq, Show)
+
+type Submakefile = [Recipe]
+
+
+data CachedCommand = CachedCommand { inputHash :: Hash
+                                   , outputHash :: Hash
+                                   , command :: Command
+                                   }
+  deriving (Eq, Show)
+
+type Cache = [CachedCommand]

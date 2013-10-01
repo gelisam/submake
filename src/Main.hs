@@ -1,6 +1,7 @@
 module Main where
 
 import Control.Applicative
+import GHC.IO.Encoding
 import System.IO
 import System.IO.Error
 import System.IO.Error.Extra
@@ -16,6 +17,11 @@ withSubmakefile = tryWithFile catch "submakefile" ReadMode
     catch = catchWhen isDoesNotExistError $ \_ ->
               error "no submakefile found."
 
-main = withSubmakefile $ \f -> do
-         xs <- hGetContents f
-         mapM_ cook $ parseSubmakefile xs
+main = do
+    -- for all file handles to use binary. otherwise the user
+    -- couldn't use image-manipulation tools such as "pngtopnm".
+    setLocaleEncoding char8
+    
+    withSubmakefile $ \f -> do
+      s <- parseSubmakefile <$> hGetContents f
+      cook_submakefile s

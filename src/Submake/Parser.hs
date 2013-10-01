@@ -17,7 +17,17 @@ parseSubmakefile = parseRecipes . filter (not . null) . lines
     parseRecipes (x:xs) = parseRecipe x (map unindent xs')
                         : parseRecipes xs''
       where
-        (xs', xs'') = break (not . indented) xs
+        (xs', xs'') = span indented xs
         indented "" = False
         indented (x:xs) = isSpace x
         unindent = dropWhile isSpace
+
+
+parseCachedCommand :: String -> CachedCommand
+parseCachedCommand xs = CachedCommand i o c
+  where
+    (i, ' ':xs') = span isHexDigit xs
+    (o, ' ':c  ) = span isHexDigit xs'
+
+parseCacheFile :: String -> Cache
+parseCacheFile = map parseCachedCommand . lines
