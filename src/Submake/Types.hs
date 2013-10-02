@@ -20,4 +20,4 @@ data CachedCommand = CachedCommand { inputHash :: Hash
                                    }
   deriving (Eq, Show)
 
-type Cache = [CachedCommand]
+type Cachefile = [CachedCommand]

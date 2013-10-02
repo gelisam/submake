@@ -29,5 +29,5 @@ parseCachedCommand xs = CachedCommand i o c
     (i, ' ':xs') = span isHexDigit xs
     (o, ' ':c  ) = span isHexDigit xs'
 
-parseCacheFile :: String -> Cache
-parseCacheFile = map parseCachedCommand . lines
+parseCachefile :: String -> Cachefile
+parseCachefile = map parseCachedCommand . lines

@@ -3,8 +3,7 @@ module Submake.Git where
 import System.Process
 import System.Process.Extra
 
-
-type Hash = String
+import Submake.Types
 
 
 hashFile :: FilePath -> IO Hash
