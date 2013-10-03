@@ -1,19 +1,19 @@
 Submake
 =======
 
-A submakefile is similar to a makefile, except that recipes express bash pipelines instead of bash scripts.
+Submake lets you to write and debug long bash pipelines. It stores intermediate results, using them to automatically skip the part of the pipeline which has not changed since the last run.
+
+
+Usage
+---
+
+A submakefile is similar to a makefile, except that recipes express Bash pipelines instead of Bash scripts.
 
     mythumbnail.png: myimage.png
       pngtopnm
       pamscale -xyfit 32 32
       pnmtopng
 
-Currently, submake always re-builds all the files, whether their input has changed or not.
+Like make, submake re-evaluates a recipe if its input file has changed. In contrast to make, submake also re-evaluates a pipeline if the pipeline itself has changed.
 
-
-Future plans
----
-
-Like make, submake will re-evaluate a pipeline if its input file has changed. In contrast to make, submake will also re-evaluate a pipeline if the pipeline itself has changed.
-
-Submake will use git to store intermediate results. Thus, if only part of the pipeline has changed, only part of the pipeline will be re-evaluated.
+Submake uses git to store intermediate results, using a non-intrusive mechanism which doesn't create new commits. It won't work unless it is executed from inside a git repository.
